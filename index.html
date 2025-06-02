@@ -322,11 +322,7 @@
       return;
     }
 
-    if (playersA.length === 0 || playersB.length === 0) {
-      alert("Both teams must be created with players before toss.");
-      return;
-    }
-
+    // Remove player count check here as per your request
     // Get team names or defaults
     const teamAName = document.getElementById("teamAName").value.trim() || "Team A";
     const teamBName = document.getElementById("teamBName").value.trim() || "Team B";
