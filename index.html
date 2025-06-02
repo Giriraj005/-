@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Gully Cricket Team Maker - Team A & Team B</title>
   <style>
-    /* (same styles as before) */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #0099f7 0%, #f11712 100%);
@@ -98,6 +97,30 @@
       color: #ffe066;
       text-shadow: 1px 1px 3px #000000cc;
     }
+    /* Toss Section */
+    #tossSection {
+      width: 100%;
+      max-width: 760px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      padding: 20px 30px;
+      margin-top: 30px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      color: #fff;
+    }
+    #tossSection h2 {
+      color: #00ffea;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px #000000bb;
+    }
+    #tossResult {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #00ffea;
+      text-shadow: 1px 1px 4px #000000cc;
+    }
   </style>
 </head>
 <body>
@@ -106,10 +129,10 @@
 <div class="team-section" id="teamASection">
   <h2>Team A</h2>
   <form id="teamAForm">
-    <input type="text" id="teamAName" placeholder="Team Name" required />
-    <input type="text" id="captainAName" placeholder="Captain Name" required />
-    <input type="text" id="playerAName" placeholder="Player Name" required />
-    <select id="playerARole" required>
+    <input type="text" id="teamAName" placeholder="Team Name (optional)" />
+    <input type="text" id="captainAName" placeholder="Captain Name (optional)" />
+    <input type="text" id="playerAName" placeholder="Player Name" />
+    <select id="playerARole">
       <option value="">Select Role</option>
       <option>Batsman</option>
       <option>Bowler</option>
@@ -133,10 +156,10 @@
 <div class="team-section" id="teamBSection">
   <h2>Team B</h2>
   <form id="teamBForm">
-    <input type="text" id="teamBName" placeholder="Team Name" required />
-    <input type="text" id="captainBName" placeholder="Captain Name" required />
-    <input type="text" id="playerBName" placeholder="Player Name" required />
-    <select id="playerBRole" required>
+    <input type="text" id="teamBName" placeholder="Team Name (optional)" />
+    <input type="text" id="captainBName" placeholder="Captain Name (optional)" />
+    <input type="text" id="playerBName" placeholder="Player Name" />
+    <select id="playerBRole">
       <option value="">Select Role</option>
       <option>Batsman</option>
       <option>Bowler</option>
@@ -156,10 +179,18 @@
   </div>
 </div>
 
+<!-- Toss Section -->
+<div id="tossSection">
+  <h2>Toss</h2>
+  <button onclick="doToss()">Do Toss</button>
+  <div id="tossResult"></div>
+</div>
+
 <script>
   const passwords = {
     A: "9009",
-    B: "9828"
+    B: "9828",
+    toss: "9680"
   };
 
   let playersA = [];
@@ -230,17 +261,17 @@
     const teamName = document.getElementById("teamAName").value.trim();
     const captainName = document.getElementById("captainAName").value.trim();
 
-    if (!teamName || !captainName) {
-      alert("Fill team name and captain name");
-      return;
-    }
     if (playersA.length === 0) {
       alert("Add players before creating the team");
       return;
     }
 
-    localStorage.setItem("teamA", JSON.stringify({ teamName, captainName, players: playersA }));
-    showTeam('A', teamName, captainName);
+    // Default names if empty
+    const finalTeamName = teamName || "Team A";
+    const finalCaptainName = captainName || "Captain";
+
+    localStorage.setItem("teamA", JSON.stringify({ teamName: finalTeamName, captainName: finalCaptainName, players: playersA }));
+    showTeam('A', finalTeamName, finalCaptainName);
   });
 
   document.getElementById("teamBForm").addEventListener("submit", e => {
@@ -248,17 +279,17 @@
     const teamName = document.getElementById("teamBName").value.trim();
     const captainName = document.getElementById("captainBName").value.trim();
 
-    if (!teamName || !captainName) {
-      alert("Fill team name and captain name");
-      return;
-    }
     if (playersB.length === 0) {
       alert("Add players before creating the team");
       return;
     }
 
-    localStorage.setItem("teamB", JSON.stringify({ teamName, captainName, players: playersB }));
-    showTeam('B', teamName, captainName);
+    // Default names if empty
+    const finalTeamName = teamName || "Team B";
+    const finalCaptainName = captainName || "Captain";
+
+    localStorage.setItem("teamB", JSON.stringify({ teamName: finalTeamName, captainName: finalCaptainName, players: playersB }));
+    showTeam('B', finalTeamName, finalCaptainName);
   });
 
   function resetData(team) {
@@ -281,6 +312,29 @@
       document.getElementById("teamBDisplay").style.display = "none";
     }
     alert(`Team ${team} data reset successfully!`);
+  }
+
+  function doToss() {
+    const password = prompt("Enter toss password:");
+    if (password === null) return;
+    if (password !== passwords.toss) {
+      alert("Incorrect toss password.");
+      return;
+    }
+
+    if (playersA.length === 0 || playersB.length === 0) {
+      alert("Both teams must be created with players before toss.");
+      return;
+    }
+
+    // Get team names or defaults
+    const teamAName = document.getElementById("teamAName").value.trim() || "Team A";
+    const teamBName = document.getElementById("teamBName").value.trim() || "Team B";
+
+    const tossWinner = Math.random() < 0.5 ? teamAName : teamBName;
+
+    const tossResultDiv = document.getElementById("tossResult");
+    tossResultDiv.textContent = `🏆 Toss Winner: ${tossWinner}! 🎉`;
   }
 </script>
 
