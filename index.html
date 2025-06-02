@@ -4,44 +4,99 @@
   <meta charset="UTF-8" />
   <title>Gully Cricket Team Maker - Team A & Team B</title>
   <style>
+    /* (same styles as before) */
     body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0099f7 0%, #f11712 100%);
       padding: 20px;
       display: flex;
       justify-content: center;
       gap: 40px;
       flex-wrap: wrap;
+      min-height: 100vh;
+      color: #fff;
     }
     .team-section {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 25px 30px;
+      border-radius: 15px;
       width: 350px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 2px solid #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h2 {
+      color: #ffd700;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px #00000099;
+      font-weight: 700;
+      font-size: 1.8rem;
     }
     input, select, button {
       width: 100%;
       margin: 10px 0;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
       box-sizing: border-box;
+      transition: background-color 0.3s ease;
     }
-    .player {
-      background: #e8f0fe;
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 5px;
+    input, select {
+      background-color: rgba(255, 255, 255, 0.8);
+      color: #222;
+      font-weight: 600;
+    }
+    input::placeholder, select option {
+      color: #666;
+    }
+    input:focus, select:focus {
+      outline: 2px solid #ffd700;
+      background-color: #fff;
+    }
+    button {
+      cursor: pointer;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(90deg, #f11712 0%, #f58529 100%);
+      box-shadow: 0 4px 8px #f1171211;
+      border: none;
+      user-select: none;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #f58529 0%, #f11712 100%);
+      box-shadow: 0 6px 12px #f1171233;
     }
     .reset-btn {
-      background-color: red;
-      color: white;
-      border: none;
+      background-color: #900000cc;
+      margin-top: 10px;
     }
-    h2 {
-      color: #007bff;
-      text-align: center;
+    .reset-btn:hover {
+      background-color: #ff0000cc;
+      box-shadow: 0 6px 12px #ff000099;
+    }
+    .player {
+      background: rgba(255, 255, 255, 0.25);
+      margin: 6px 0;
+      padding: 10px 15px;
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 5px #00000055;
+    }
+    #teamADisplay p, #teamBDisplay p {
+      margin: 8px 0;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px #000000cc;
+    }
+    #teamADisplay h3, #teamBDisplay h3 {
+      margin-top: 15px;
+      margin-bottom: 8px;
+      color: #ffe066;
+      text-shadow: 1px 1px 3px #000000cc;
     }
   </style>
 </head>
@@ -102,13 +157,14 @@
 </div>
 
 <script>
-  const correctPassword = "9009";
+  const passwords = {
+    A: "9009",
+    B: "9828"
+  };
 
-  // Store players separately
   let playersA = [];
   let playersB = [];
 
-  // Load saved data on load
   window.onload = () => {
     const teamAData = JSON.parse(localStorage.getItem("teamA"));
     if (teamAData) {
@@ -122,11 +178,10 @@
     }
   };
 
-  // Add player for team A or B
   function addPlayer(team) {
-    const password = prompt("Enter password to add a player:");
-    if (password === null) return; // cancelled
-    if (password !== correctPassword) {
+    const password = prompt(`Enter password to add a player for Team ${team}:`);
+    if (password === null) return;
+    if (password !== passwords[team]) {
       alert("Incorrect password. Player not added.");
       return;
     }
@@ -152,7 +207,6 @@
     alert(`Player added to Team ${team}!`);
   }
 
-  // Show team details on page
   function showTeam(team, teamName, captainName) {
     document.getElementById(`showTeam${team}Name`).textContent = teamName;
     document.getElementById(`showCaptain${team}`).textContent = captainName;
@@ -171,7 +225,6 @@
     document.getElementById(`team${team}Display`).style.display = "block";
   }
 
-  // Handle form submit to create/save team data
   document.getElementById("teamAForm").addEventListener("submit", e => {
     e.preventDefault();
     const teamName = document.getElementById("teamAName").value.trim();
@@ -208,11 +261,10 @@
     showTeam('B', teamName, captainName);
   });
 
-  // Reset team data with password
   function resetData(team) {
     const password = prompt(`Enter password to reset Team ${team} data:`);
-    if (password === null) return; // cancelled
-    if (password !== correctPassword) {
+    if (password === null) return;
+    if (password !== passwords[team]) {
       alert("Incorrect password. Reset cancelled.");
       return;
     }
