@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gully Cricket Team Maker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #teamDisplay {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .player {
+      background: #e8f0fe;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Gully Cricket Team Maker</h1>
+
+<form id="teamForm">
+  <input type="text" id="teamName" placeholder="Team Name" required>
+  <input type="text" id="captainName" placeholder="Captain Name" required>
+  <input type="text" id="playerName" placeholder="Player Name" required>
+  <select id="playerRole" required>
+    <option value="">Select Role</option>
+    <option>Batsman</option>
+    <option>Bowler</option>
+    <option>All-Rounder</option>
+    <option>Wicketkeeper</option>
+  </select>
+  <button type="button" onclick="addPlayer()">Add Player</button>
+  <button type="submit">Create Team</button>
+</form>
+
+<div id="teamDisplay" style="display:none;">
+  <h2>Team Summary</h2>
+  <p><strong>Team Name:</strong> <span id="showTeamName"></span></p>
+  <p><strong>Captain:</strong> <span id="showCaptain"></span></p>
+  <h3>Players:</h3>
+  <div id="playerList"></div>
+</div>
+
+<script>
+  let players = [];
+
+  function addPlayer() {
+    const name = document.getElementById("playerName").value;
+    const role = document.getElementById("playerRole").value;
+
+    if (name && role) {
+      players.push({ name, role });
+      document.getElementById("playerName").value = "";
+      document.getElementById("playerRole").value = "";
+      alert("Player added!");
+    } else {
+      alert("Please enter both name and role");
+    }
+  }
+
+  document.getElementById("teamForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const teamName = document.getElementById("teamName").value;
+    const captainName = document.getElementById("captainName").value;
+
+    if (teamName && captainName && players.length > 0) {
+      document.getElementById("showTeamName").textContent = teamName;
+      document.getElementById("showCaptain").textContent = captainName;
+
+      const list = document.getElementById("playerList");
+      list.innerHTML = "";
+      players.forEach((player, index) => {
+        const div = document.createElement("div");
+        div.className = "player";
+        div.textContent = `${index + 1}. ${player.name} - ${player.role}`;
+        list.appendChild(div);
+      });
+
+      document.getElementById("teamDisplay").style.display = "block";
+    } else {
+      alert("Please fill all fields and add at least one player");
+    }
+  });
+</script>
+
+</body>
+</html>
