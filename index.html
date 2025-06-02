@@ -138,3 +138,208 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PAREEK CRICKET ACADEMY</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .team-section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 30px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .player {
+      background: #e8f0fe;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .reset-btn {
+      background-color: red;
+      color: white;
+      border: none;
+    }
+    h2 {
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Gully Cricket Team Maker</h1>
+
+<!-- TEAM A FORM -->
+<div class="team-section">
+  <h2>Team A</h2>
+  <form id="teamAForm">
+    <input type="text" id="teamAName" placeholder="Team A Name" required>
+    <input type="text" id="captainAName" placeholder="Captain Name" required>
+    <input type="text" id="playerAName" placeholder="Player Name" required>
+    <select id="playerARole" required>
+      <option value="">Select Role</option>
+      <option>Batsman</option>
+      <option>Bowler</option>
+      <option>All-Rounder</option>
+      <option>Wicketkeeper</option>
+    </select>
+    <button type="button" onclick="addPlayer('A')">Add Player</button>
+    <button type="submit">Create Team A</button>
+    <button type="button" class="reset-btn" onclick="resetData('A')">Reset Team A</button>
+  </form>
+
+  <div id="teamADisplay" style="display:none;">
+    <p><strong>Team Name:</strong> <span id="showTeamAName"></span></p>
+    <p><strong>Captain:</strong> <span id="showCaptainA"></span></p>
+    <h3>Players:</h3>
+    <div id="playerAList"></div>
+  </div>
+</div>
+
+<!-- TEAM B FORM -->
+<div class="team-section">
+  <h2>Team B</h2>
+  <form id="teamBForm">
+    <input type="text" id="teamBName" placeholder="Team B Name" required>
+    <input type="text" id="captainBName" placeholder="Captain Name" required>
+    <input type="text" id="playerBName" placeholder="Player Name" required>
+    <select id="playerBRole" required>
+      <option value="">Select Role</option>
+      <option>Batsman</option>
+      <option>Bowler</option>
+      <option>All-Rounder</option>
+      <option>Wicketkeeper</option>
+    </select>
+    <button type="button" onclick="addPlayer('B')">Add Player</button>
+    <button type="submit">Create Team B</button>
+    <button type="button" class="reset-btn" onclick="resetData('B')">Reset Team B</button>
+  </form>
+
+  <div id="teamBDisplay" style="display:none;">
+    <p><strong>Team Name:</strong> <span id="showTeamBName"></span></p>
+    <p><strong>Captain:</strong> <span id="showCaptainB"></span></p>
+    <h3>Players:</h3>
+    <div id="playerBList"></div>
+  </div>
+</div>
+
+<script>
+  let playersA = [];
+  let playersB = [];
+
+  // On load: get saved data
+  window.onload = function () {
+    const teamAData = JSON.parse(localStorage.getItem("teamA"));
+    if (teamAData) {
+      playersA = teamAData.players;
+      showTeam("A", teamAData.teamName, teamAData.captainName);
+    }
+
+    const teamBData = JSON.parse(localStorage.getItem("teamB"));
+    if (teamBData) {
+      playersB = teamBData.players;
+      showTeam("B", teamBData.teamName, teamBData.captainName);
+    }
+  };
+
+  function addPlayer(team) {
+    const nameInput = document.getElementById(`player${team}Name`);
+    const roleInput = document.getElementById(`player${team}Role`);
+    const name = nameInput.value;
+    const role = roleInput.value;
+
+    if (name && role) {
+      if (team === 'A') {
+        playersA.push({ name, role });
+      } else {
+        playersB.push({ name, role });
+      }
+      nameInput.value = "";
+      roleInput.value = "";
+      alert("Player added to Team " + team + "!");
+    } else {
+      alert("Enter both player name and role");
+    }
+  }
+
+  function showTeam(team, teamName, captainName) {
+    document.getElementById(`showTeam${team}Name`).textContent = teamName;
+    document.getElementById(`showCaptain${team}`).textContent = captainName;
+
+    const list = document.getElementById(`player${team}List`);
+    list.innerHTML = "";
+    const teamPlayers = team === 'A' ? playersA : playersB;
+    teamPlayers.forEach((player, i) => {
+      const div = document.createElement("div");
+      div.className = "player";
+      div.textContent = `${i + 1}. ${player.name} - ${player.role}`;
+      list.appendChild(div);
+    });
+
+    document.getElementById(`team${team}Display`).style.display = "block";
+  }
+
+  document.getElementById("teamAForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const teamName = document.getElementById("teamAName").value;
+    const captainName = document.getElementById("captainAName").value;
+
+    if (teamName && captainName && playersA.length > 0) {
+      localStorage.setItem("teamA", JSON.stringify({ teamName, captainName, players: playersA }));
+      showTeam("A", teamName, captainName);
+    } else {
+      alert("Fill all fields and add players");
+    }
+  });
+
+  document.getElementById("teamBForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const teamName = document.getElementById("teamBName").value;
+    const captainName = document.getElementById("captainBName").value;
+
+    if (teamName && captainName && playersB.length > 0) {
+      localStorage.setItem("teamB", JSON.stringify({ teamName, captainName, players: playersB }));
+      showTeam("B", teamName, captainName);
+    } else {
+      alert("Fill all fields and add players");
+    }
+  });
+
+  function resetData(team) {
+    if (confirm(`Delete Team ${team} data?`)) {
+      localStorage.removeItem(`team${team}`);
+      if (team === 'A') {
+        playersA = [];
+        document.getElementById("teamAForm").reset();
+        document.getElementById("teamADisplay").style.display = "none";
+      } else {
+        playersB = [];
+        document.getElementById("teamBForm").reset();
+        document.getElementById("teamBDisplay").style.display = "none";
+      }
+      alert(`Team ${team} data reset successfully!`);
+    }
+  }
+</script>
+
+</body>
+</html>
