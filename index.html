@@ -1,164 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>RAMPURA CRICKET </title>
+  <meta charset="UTF-8" />
+  <title>Gully Cricket Team Maker - Team A & Team B</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f2f2f2;
       padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    form {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    input, select, button {
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    #teamDisplay {
-      max-width: 600px;
-      margin: 30px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .player {
-      background: #e8f0fe;
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 5px;
-    }
-  </style>
-</head>
-<body>
-
-<h1>Gully Cricket Team Maker</h1>
-
-<form id="teamForm">
-  <input type="text" id="teamName" placeholder="Team Name" required>
-  <input type="text" id="captainName" placeholder="Captain Name" required>
-  <input type="text" id="playerName" placeholder="Player Name" required>
-  <select id="playerRole" required>
-    <option value="">Select Role</option>
-    <option>Batsman</option>
-    <option>Bowler</option>
-    <option>All-Rounder</option>
-    <option>Wicketkeeper</option>
-  </select>
-  <button type="button" onclick="addPlayer()">Add Player</button>
-  <button type="submit">Create Team</button>
-</form>
-
-<div id="teamDisplay" style="display:none;">
-  <h2>Team Summary</h2>
-  <p><strong>Team Name:</strong> <span id="showTeamName"></span></p>
-  <p><strong>Captain:</strong> <span id="showCaptain"></span></p>
-  <h3>Players:</h3>
-  <div id="playerList"></div>
-</div>
-
-<script>
-  let players = [];
-
-  // Load team from localStorage on page load
-  window.onload = function () {
-    const savedTeam = localStorage.getItem("gullyTeam");
-    if (savedTeam) {
-      const data = JSON.parse(savedTeam);
-      players = data.players;
-      showTeam(data.teamName, data.captainName);
-    }
-  };
-
-  function addPlayer() {
-    const name = document.getElementById("playerName").value;
-    const role = document.getElementById("playerRole").value;
-
-    if (name && role) {
-      players.push({ name, role });
-      document.getElementById("playerName").value = "";
-      document.getElementById("playerRole").value = "";
-      alert("Player added!");
-    } else {
-      alert("Please enter both name and role");
-    }
-  }
-
-  document.getElementById("teamForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const teamName = document.getElementById("teamName").value;
-    const captainName = document.getElementById("captainName").value;
-
-    if (teamName && captainName && players.length > 0) {
-      showTeam(teamName, captainName);
-
-      // Save to localStorage
-      const teamData = {
-        teamName,
-        captainName,
-        players
-      };
-      localStorage.setItem("gullyTeam", JSON.stringify(teamData));
-    } else {
-      alert("Please fill all fields and add at least one player");
-    }
-  });
-
-  function showTeam(teamName, captainName) {
-    document.getElementById("showTeamName").textContent = teamName;
-    document.getElementById("showCaptain").textContent = captainName;
-
-    const list = document.getElementById("playerList");
-    list.innerHTML = "";
-    players.forEach((player, index) => {
-      const div = document.createElement("div");
-      div.className = "player";
-      div.textContent = `${index + 1}. ${player.name} - ${player.role}`;
-      list.appendChild(div);
-    });
-
-    document.getElementById("teamDisplay").style.display = "block";
-  }
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>PAREEK CRICKET ACADEMY</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
     }
     .team-section {
       background: white;
       padding: 20px;
       border-radius: 10px;
-      max-width: 600px;
-      margin: 30px auto;
+      width: 350px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     input, select, button {
@@ -167,6 +26,7 @@
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
     }
     .player {
       background: #e8f0fe;
@@ -181,20 +41,19 @@
     }
     h2 {
       color: #007bff;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
-<h1>Gully Cricket Team Maker</h1>
-
-<!-- TEAM A FORM -->
-<div class="team-section">
+<!-- Team A -->
+<div class="team-section" id="teamASection">
   <h2>Team A</h2>
   <form id="teamAForm">
-    <input type="text" id="teamAName" placeholder="Team A Name" required>
-    <input type="text" id="captainAName" placeholder="Captain Name" required>
-    <input type="text" id="playerAName" placeholder="Player Name" required>
+    <input type="text" id="teamAName" placeholder="Team Name" required />
+    <input type="text" id="captainAName" placeholder="Captain Name" required />
+    <input type="text" id="playerAName" placeholder="Player Name" required />
     <select id="playerARole" required>
       <option value="">Select Role</option>
       <option>Batsman</option>
@@ -203,8 +62,8 @@
       <option>Wicketkeeper</option>
     </select>
     <button type="button" onclick="addPlayer('A')">Add Player</button>
-    <button type="submit">Create Team A</button>
-    <button type="button" class="reset-btn" onclick="resetData('A')">Reset Team A</button>
+    <button type="submit">Create Team</button>
+    <button type="button" class="reset-btn" onclick="resetData('A')">Reset Team</button>
   </form>
 
   <div id="teamADisplay" style="display:none;">
@@ -215,13 +74,13 @@
   </div>
 </div>
 
-<!-- TEAM B FORM -->
-<div class="team-section">
+<!-- Team B -->
+<div class="team-section" id="teamBSection">
   <h2>Team B</h2>
   <form id="teamBForm">
-    <input type="text" id="teamBName" placeholder="Team B Name" required>
-    <input type="text" id="captainBName" placeholder="Captain Name" required>
-    <input type="text" id="playerBName" placeholder="Player Name" required>
+    <input type="text" id="teamBName" placeholder="Team Name" required />
+    <input type="text" id="captainBName" placeholder="Captain Name" required />
+    <input type="text" id="playerBName" placeholder="Player Name" required />
     <select id="playerBRole" required>
       <option value="">Select Role</option>
       <option>Batsman</option>
@@ -230,8 +89,8 @@
       <option>Wicketkeeper</option>
     </select>
     <button type="button" onclick="addPlayer('B')">Add Player</button>
-    <button type="submit">Create Team B</button>
-    <button type="button" class="reset-btn" onclick="resetData('B')">Reset Team B</button>
+    <button type="submit">Create Team</button>
+    <button type="button" class="reset-btn" onclick="resetData('B')">Reset Team</button>
   </form>
 
   <div id="teamBDisplay" style="display:none;">
@@ -243,52 +102,66 @@
 </div>
 
 <script>
+  const correctPassword = "9009";
+
+  // Store players separately
   let playersA = [];
   let playersB = [];
 
-  // On load: get saved data
-  window.onload = function () {
+  // Load saved data on load
+  window.onload = () => {
     const teamAData = JSON.parse(localStorage.getItem("teamA"));
     if (teamAData) {
       playersA = teamAData.players;
-      showTeam("A", teamAData.teamName, teamAData.captainName);
+      showTeam('A', teamAData.teamName, teamAData.captainName);
     }
-
     const teamBData = JSON.parse(localStorage.getItem("teamB"));
     if (teamBData) {
       playersB = teamBData.players;
-      showTeam("B", teamBData.teamName, teamBData.captainName);
+      showTeam('B', teamBData.teamName, teamBData.captainName);
     }
   };
 
+  // Add player for team A or B
   function addPlayer(team) {
+    const password = prompt("Enter password to add a player:");
+    if (password === null) return; // cancelled
+    if (password !== correctPassword) {
+      alert("Incorrect password. Player not added.");
+      return;
+    }
+
     const nameInput = document.getElementById(`player${team}Name`);
     const roleInput = document.getElementById(`player${team}Role`);
-    const name = nameInput.value;
+    const name = nameInput.value.trim();
     const role = roleInput.value;
 
-    if (name && role) {
-      if (team === 'A') {
-        playersA.push({ name, role });
-      } else {
-        playersB.push({ name, role });
-      }
-      nameInput.value = "";
-      roleInput.value = "";
-      alert("Player added to Team " + team + "!");
-    } else {
+    if (!name || !role) {
       alert("Enter both player name and role");
+      return;
     }
+
+    if (team === 'A') {
+      playersA.push({ name, role });
+    } else {
+      playersB.push({ name, role });
+    }
+
+    nameInput.value = "";
+    roleInput.value = "";
+    alert(`Player added to Team ${team}!`);
   }
 
+  // Show team details on page
   function showTeam(team, teamName, captainName) {
     document.getElementById(`showTeam${team}Name`).textContent = teamName;
     document.getElementById(`showCaptain${team}`).textContent = captainName;
 
     const list = document.getElementById(`player${team}List`);
     list.innerHTML = "";
-    const teamPlayers = team === 'A' ? playersA : playersB;
-    teamPlayers.forEach((player, i) => {
+    const players = team === 'A' ? playersA : playersB;
+
+    players.forEach((player, i) => {
       const div = document.createElement("div");
       div.className = "player";
       div.textContent = `${i + 1}. ${player.name} - ${player.role}`;
@@ -298,46 +171,64 @@
     document.getElementById(`team${team}Display`).style.display = "block";
   }
 
-  document.getElementById("teamAForm").addEventListener("submit", function(e) {
+  // Handle form submit to create/save team data
+  document.getElementById("teamAForm").addEventListener("submit", e => {
     e.preventDefault();
-    const teamName = document.getElementById("teamAName").value;
-    const captainName = document.getElementById("captainAName").value;
+    const teamName = document.getElementById("teamAName").value.trim();
+    const captainName = document.getElementById("captainAName").value.trim();
 
-    if (teamName && captainName && playersA.length > 0) {
-      localStorage.setItem("teamA", JSON.stringify({ teamName, captainName, players: playersA }));
-      showTeam("A", teamName, captainName);
-    } else {
-      alert("Fill all fields and add players");
+    if (!teamName || !captainName) {
+      alert("Fill team name and captain name");
+      return;
     }
+    if (playersA.length === 0) {
+      alert("Add players before creating the team");
+      return;
+    }
+
+    localStorage.setItem("teamA", JSON.stringify({ teamName, captainName, players: playersA }));
+    showTeam('A', teamName, captainName);
   });
 
-  document.getElementById("teamBForm").addEventListener("submit", function(e) {
+  document.getElementById("teamBForm").addEventListener("submit", e => {
     e.preventDefault();
-    const teamName = document.getElementById("teamBName").value;
-    const captainName = document.getElementById("captainBName").value;
+    const teamName = document.getElementById("teamBName").value.trim();
+    const captainName = document.getElementById("captainBName").value.trim();
 
-    if (teamName && captainName && playersB.length > 0) {
-      localStorage.setItem("teamB", JSON.stringify({ teamName, captainName, players: playersB }));
-      showTeam("B", teamName, captainName);
-    } else {
-      alert("Fill all fields and add players");
+    if (!teamName || !captainName) {
+      alert("Fill team name and captain name");
+      return;
     }
+    if (playersB.length === 0) {
+      alert("Add players before creating the team");
+      return;
+    }
+
+    localStorage.setItem("teamB", JSON.stringify({ teamName, captainName, players: playersB }));
+    showTeam('B', teamName, captainName);
   });
 
+  // Reset team data with password
   function resetData(team) {
-    if (confirm(`Delete Team ${team} data?`)) {
-      localStorage.removeItem(`team${team}`);
-      if (team === 'A') {
-        playersA = [];
-        document.getElementById("teamAForm").reset();
-        document.getElementById("teamADisplay").style.display = "none";
-      } else {
-        playersB = [];
-        document.getElementById("teamBForm").reset();
-        document.getElementById("teamBDisplay").style.display = "none";
-      }
-      alert(`Team ${team} data reset successfully!`);
+    const password = prompt(`Enter password to reset Team ${team} data:`);
+    if (password === null) return; // cancelled
+    if (password !== correctPassword) {
+      alert("Incorrect password. Reset cancelled.");
+      return;
     }
+
+    if (team === 'A') {
+      localStorage.removeItem("teamA");
+      playersA = [];
+      document.getElementById("teamAForm").reset();
+      document.getElementById("teamADisplay").style.display = "none";
+    } else {
+      localStorage.removeItem("teamB");
+      playersB = [];
+      document.getElementById("teamBForm").reset();
+      document.getElementById("teamBDisplay").style.display = "none";
+    }
+    alert(`Team ${team} data reset successfully!`);
   }
 </script>
 
